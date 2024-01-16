@@ -2,4 +2,37 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  color: white;
+  font-family: "Press Start 2P", system-ui;
+}
+
+main {
+  background-color: black;
+}
+
+.menu {
+  display: flex;
+  width: 100vw;
+  gap: 15rem;
+  justify-content: space-around;
+  text-transform: uppercase;
+  position: absolute;
+}
+
+.menu-left,
+.menu-right {
+  width: fit-content;
+  margin: 1rem;
+
+  > * {
+    padding: 0.2rem;
+  }
+}
+
+.menu-life {
+  display: flex;
+}
+
+.menu-life img {
+  height: 24px;
 }
