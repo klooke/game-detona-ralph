@@ -5,6 +5,9 @@
   --level-enemy-height: calc(152px * var(--scale));
   --level-windows-height: calc(445px * var(--scale));
   --level-floor-height: calc(44px * var(--scale));
+  --window-width: calc(67px * var(--scale));
+  --window-height: calc(119px * var(--scale));
+  --fix-window-padding: 0 calc(3rem * var(--scale));
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
 }
@@ -65,6 +68,16 @@ main {
 }
 
 .level-windows {
+  display: grid;
   width: var(--level-width);
   height: var(--level-windows-height);
+  padding: var(--fix-window-padding);
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  justify-items: center;
+
+  > img {
+    width: var(--window-width);
+    height: var(--window-height);
+  }
 }
