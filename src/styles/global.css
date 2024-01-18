@@ -1,3 +1,11 @@
+:root {
+  --scale: 1.5;
+  --level-height: calc(597px * var(--scale));
+  --level-floor-height: calc(44px * var(--scale));
+  --fix-floor-position: 0
+    calc(var(--level-width) - (var(--level-floor-height) / 2));
+}
+
 * {
   padding: 0;
   margin: 0;
@@ -35,4 +43,12 @@ main {
 
 .menu-life img {
   height: 24px;
+}
+
+.level {
+  min-height: 100vh;
+  background: url("../../res/sprites/start-level.png") no-repeat,
+    url("../../res/sprites/level-floor.png") repeat-x;
+  background-size: auto var(--level-height), auto var(--level-floor-height);
+  background-position: top, var(--fix-floor-position);
 }
