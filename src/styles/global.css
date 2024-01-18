@@ -1,6 +1,9 @@
 :root {
   --scale: 1.5;
+  --level-width: calc(581px * var(--scale));
   --level-height: calc(597px * var(--scale));
+  --level-enemy-height: calc(152px * var(--scale));
+  --level-windows-height: calc(445px * var(--scale));
   --level-floor-height: calc(44px * var(--scale));
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
@@ -46,9 +49,22 @@ main {
 }
 
 .level {
+  display: flex;
   min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
   background: url("../../res/sprites/start-level.png") no-repeat,
     url("../../res/sprites/level-floor.png") repeat-x;
   background-size: auto var(--level-height), auto var(--level-floor-height);
   background-position: top, var(--fix-floor-position);
+}
+
+.level-enemy {
+  width: var(--level-width);
+  height: var(--level-enemy-height);
+}
+
+.level-windows {
+  width: var(--level-width);
+  height: var(--level-windows-height);
 }
