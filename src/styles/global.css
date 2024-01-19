@@ -2,8 +2,6 @@
   --scale: 1.5;
   --level-width: calc(581px * var(--scale));
   --level-height: calc(597px * var(--scale));
-  --level-enemy-height: calc(152px * var(--scale));
-  --level-windows-height: calc(445px * var(--scale));
   --level-floor-height: calc(44px * var(--scale));
   --window-width: calc(67px * var(--scale));
   --window-height: calc(119px * var(--scale));
@@ -22,6 +20,10 @@
 
 main {
   background-color: black;
+}
+
+.hidden {
+  opacity: 0;
 }
 
 .menu {
@@ -45,10 +47,10 @@ main {
 
 .menu-life {
   display: flex;
-}
 
-.menu-life img {
-  height: 24px;
+  > img {
+    height: 24px;
+  }
 }
 
 .level {
@@ -62,15 +64,10 @@ main {
   background-position: top, var(--fix-floor-position);
 }
 
-.level-enemy {
-  width: var(--level-width);
-  height: var(--level-enemy-height);
-}
-
 .level-windows {
   display: grid;
   width: var(--level-width);
-  height: var(--level-windows-height);
+  height: var(--level-height);
   padding: var(--fix-window-padding);
   grid-template-columns: repeat(5, 1fr);
   align-items: center;
