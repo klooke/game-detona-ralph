@@ -13,6 +13,11 @@ const game = {
     view: document.querySelector("#hiscore"),
     value: 0,
   },
+  life: {
+    view: document.querySelector("#life"),
+    limit: 5,
+    count: 3,
+  },
 };
 
 function addScore(value = 0) {
@@ -28,6 +33,28 @@ function addScore(value = 0) {
   return game.score;
 }
 
+function updateLife(value = 0) {
+  var lifeCount = game.life.count;
+  lifeCount += value;
+
+  if (lifeCount < 0) lifeCount = 0;
+  else if (lifeCount > game.life.limit) lifeCount = game.life.limit;
+
+  var lifeMenu = Array.from(game.life.view.getElementsByTagName("img"));
+
+  for (i = 0; i < lifeMenu.length; i++) {
+    if (lifeCount > i) {
+      lifeMenu[i].hidden = false;
+      continue;
+    }
+
+    lifeMenu[i].hidden = true;
+  }
+
+  game.life.count = lifeCount;
+
+  return game.life;
+}
 
 function updateHiscore() {
   var hiscore =
