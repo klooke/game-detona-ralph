@@ -9,6 +9,10 @@ const game = {
     id: null,
     value: 45,
   },
+  hiscore: {
+    view: document.querySelector("#hiscore"),
+    value: 0,
+  },
 };
 
 function addScore(value = 0) {
@@ -22,6 +26,19 @@ function addScore(value = 0) {
   game.score.points = score;
 
   return game.score;
+}
+
+
+function updateHiscore() {
+  var hiscore =
+    game.score.points > game.hiscore.value
+      ? game.score.points
+      : game.hiscore.value;
+
+  game.hiscore.view.textContent = String(hiscore).padStart(7, "0");
+  game.hiscore.value = hiscore;
+
+  return game.hiscore;
 }
 
 function startTime() {
