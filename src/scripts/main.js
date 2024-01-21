@@ -4,6 +4,11 @@ const game = {
     limit: 9999999,
     points: 0,
   },
+  time: {
+    view: document.querySelector("#time"),
+    id: null,
+    value: 45,
+  },
 };
 
 function addScore(value = 0) {
@@ -17,4 +22,21 @@ function addScore(value = 0) {
   game.score.points = score;
 
   return game.score;
+}
+
+function startTime() {
+  if (game.time.id) return game.time;
+
+  game.time.id = setInterval(() => {
+    var time = game.time.value;
+
+    game.time.view.textContent = String(time).padStart(2, "0");
+
+    if (time <= 0) clearInterval(game.time.id);
+    else time--;
+
+    game.time.value = time;
+  }, 1000);
+
+  return game.time;
 }
