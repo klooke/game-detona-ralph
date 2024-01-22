@@ -18,6 +18,9 @@ const game = {
     limit: 5,
     count: 3,
   },
+  player: {
+    view: document.querySelector("#player"),
+  },
 };
 
 function addScore(value = 0) {

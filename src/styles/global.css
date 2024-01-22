@@ -5,6 +5,7 @@
   --level-floor-height: calc(44px * var(--scale));
   --window-width: calc(67px * var(--scale));
   --window-height: calc(119px * var(--scale));
+  --player-height: calc(86px * var(--scale));
   --fix-window-padding: 0 calc(3rem * var(--scale));
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
@@ -77,4 +78,8 @@ main {
     width: var(--window-width);
     height: var(--window-height);
   }
+}
+
+#player {
+  height: var(--player-height);
 }
