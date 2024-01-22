@@ -18,10 +18,20 @@ const game = {
     limit: 5,
     count: 3,
   },
+  map: Array.from(document.querySelectorAll(".level-windows img")),
   player: {
     view: document.querySelector("#player"),
+    pos: { x: 2, y: 0 },
   },
 };
+
+const enemyMap = game.map.slice(0, 5);
+
+const playerMap = [
+  game.map.slice(5, 10),
+  game.map.slice(10, 15),
+  game.map.slice(15, 20),
+];
 
 function addScore(value = 0) {
   var score = game.score.points;
@@ -86,4 +96,52 @@ function startTime() {
   }, 1000);
 
   return game.time;
+}
+
+function updatePlayerPosition() {
+  try {
+    var posX = game.player.pos.x;
+    var posY = game.player.pos.y;
+
+    var { x, y } = playerMap[posX][posY].getBoundingClientRect();
+
+    game.player.view.style.left = `${x}px`;
+    game.player.view.style.top = `${y}px`;
+  } finally {
+    return game.player.view.getBoundingClientRect();
+  }
+}
+
+function addPlayerController() {
+  window.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      switch (event.key) {
+        case "ArrowDown":
+          if (game.player.pos.x < playerMap.length - 1) game.player.pos.x++;
+          break;
+        case "ArrowUp":
+          if (game.player.pos.x > 0) game.player.pos.x--;
+          break;
+        case "ArrowRight":
+          if (game.player.pos.y < playerMap[0].length - 1) game.player.pos.y++;
+          game.player.view.style.transform = "scaleX(1)";
+          break;
+        case "ArrowLeft":
+          if (game.player.pos.y > 0) game.player.pos.y--;
+          game.player.view.style.transform = "scaleX(-1)";
+          break;
+        default:
+          return;
+      }
+
+      updatePlayerPosition();
+      event.preventDefault();
+    },
+    true
+  );
 }

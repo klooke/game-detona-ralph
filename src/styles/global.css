@@ -7,6 +7,8 @@
   --window-height: calc(119px * var(--scale));
   --player-height: calc(86px * var(--scale));
   --fix-window-padding: 0 calc(3rem * var(--scale));
+  --fix-player-margin: calc(1.2rem * var(--scale)) 0 0 calc(0.4rem * var(--scale));
+  --fix-player-padding: 0 calc(1rem * var(--scale)) 0 0;
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
 }
@@ -82,4 +84,7 @@ main {
 
 #player {
   height: var(--player-height);
+  margin: var(--fix-player-margin);
+  padding: var(--fix-player-padding);
+  position: absolute;
 }
