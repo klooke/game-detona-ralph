@@ -3,7 +3,7 @@
   --font-size: calc(24px * var(--scale));
   --level-width: calc(581px * var(--scale));
   --level-height: calc(597px * var(--scale));
-  --level-floor-height: calc(44px * var(--scale));
+  --floor-size: calc(398px * var(--scale)), auto;
   --window-width: calc(67px * var(--scale));
   --window-height: calc(119px * var(--scale));
   --player-height: calc(86px * var(--scale));
@@ -12,6 +12,7 @@
   --fix-player-padding: 0 calc(1rem * var(--scale)) 0 0;
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
+  --floor-size: calc(398px * var(--scale)), auto;
 }
 
 * {
@@ -23,6 +24,7 @@
 }
 
 main {
+  height: 100vh;
   background-color: black;
 }
 
@@ -48,30 +50,30 @@ h2 {
   display: flex;
 }
 
-.level {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  align-items: center;
-  background: url("../../res/sprites/start-level.png") no-repeat,
-    url("../../res/sprites/level-floor.png") repeat-x;
-  background-size: auto var(--level-height), auto var(--level-floor-height);
-  background-position: top, var(--fix-floor-position);
+#level {
+  margin: auto;
+  position: relative;
+  z-index: 1;
 }
 
-.level-windows {
-  display: grid;
+#level-background {
+  width: 100%;
+  height: 100%;
+  background: url("../../res/sprites/floor.png") repeat-x bottom;
+  background-size: var(--floor-size);
+  position: absolute;
+  z-index: -1;
+}
+
+#level-building {
   width: var(--level-width);
   height: var(--level-height);
-  padding: var(--fix-window-padding);
+  display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-items: center;
-  justify-items: center;
-
-  > img {
-    width: var(--window-width);
-    height: var(--window-height);
-  }
+  margin: auto;
+  padding: var(--fix-window-padding);
+  background: url("../../res/sprites/building.png") no-repeat bottom;
+  background-size: cover;
 }
 
 #player {
