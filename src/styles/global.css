@@ -1,5 +1,6 @@
 :root {
   --scale: 1.5;
+  --font-size: calc(24px * var(--scale));
   --level-width: calc(581px * var(--scale));
   --level-height: calc(597px * var(--scale));
   --level-floor-height: calc(44px * var(--scale));
@@ -29,31 +30,22 @@ main {
   opacity: 0;
 }
 
-.menu {
-  display: flex;
-  width: 100vw;
-  gap: 15rem;
-  justify-content: space-around;
+h2 {
   text-transform: uppercase;
+}
+
+#hud {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, min-content);
+  column-gap: var(--level-width);
+  justify-content: center;
   position: absolute;
+  z-index: 10;
 }
 
-.menu-left,
-.menu-right {
-  width: fit-content;
-  margin: 1rem;
-
-  > * {
-    padding: 0.2rem;
-  }
-}
-
-.menu-life {
+#life {
   display: flex;
-
-  > img {
-    height: 24px;
-  }
 }
 
 .level {
