@@ -5,14 +5,14 @@
   --level-height: calc(597px * var(--scale));
   --floor-size: calc(398px * var(--scale)), auto;
   --window-width: calc(67px * var(--scale));
-  --window-height: calc(119px * var(--scale));
+  --window-height: calc(124px * var(--scale));
   --player-height: calc(86px * var(--scale));
-  --fix-window-padding: 0 calc(3rem * var(--scale));
   --fix-player-margin: calc(1.2rem * var(--scale)) 0 0 calc(0.4rem * var(--scale));
   --fix-player-padding: 0 calc(1rem * var(--scale)) 0 0;
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
   --floor-size: calc(398px * var(--scale)), auto;
+  --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
 * {
@@ -34,6 +34,22 @@ main {
 
 h2 {
   text-transform: uppercase;
+}
+
+.window {
+  width: var(--window-width);
+  height: var(--window-height);
+  margin: auto;
+  background: url("../../res/sprites/window-low.png") no-repeat left top;
+  background-size: cover;
+}
+
+.window-closed {
+  width: var(--window-width);
+  height: var(--window-height);
+  margin: auto;
+  background: url("../../res/sprites/window-closed.png") no-repeat center;
+  background-size: cover;
 }
 
 #hud {

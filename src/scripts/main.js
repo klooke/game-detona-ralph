@@ -18,20 +18,19 @@ const game = {
     limit: 5,
     count: 3,
   },
-  map: Array.from(document.querySelectorAll(".level-windows img")),
   player: {
     view: document.querySelector("#player"),
+    mapView: [
+      Array.from(document.querySelectorAll("div[id^='wp0']")),
+      Array.from(document.querySelectorAll("div[id^='wp1']")),
+      Array.from(document.querySelectorAll("div[id^='wp2']")),
+    ],
     pos: { x: 2, y: 0 },
   },
+  enemy: {
+    mapView: Array.from(document.querySelectorAll(".window-closed")),
+  },
 };
-
-const enemyMap = game.map.slice(0, 5);
-
-const playerMap = [
-  game.map.slice(5, 10),
-  game.map.slice(10, 15),
-  game.map.slice(15, 20),
-];
 
 function addScore(value = 0) {
   var score = game.score.points;
@@ -103,7 +102,7 @@ function updatePlayerPosition() {
     var posX = game.player.pos.x;
     var posY = game.player.pos.y;
 
-    var { x, y } = playerMap[posX][posY].getBoundingClientRect();
+    var { x, y } = game.player.mapView[posX][posY].getBoundingClientRect();
 
     game.player.view.style.left = `${x}px`;
     game.player.view.style.top = `${y}px`;
@@ -122,13 +121,15 @@ function addPlayerController() {
 
       switch (event.key) {
         case "ArrowDown":
-          if (game.player.pos.x < playerMap.length - 1) game.player.pos.x++;
+          if (game.player.pos.x < game.player.mapView.length - 1)
+            game.player.pos.x++;
           break;
         case "ArrowUp":
           if (game.player.pos.x > 0) game.player.pos.x--;
           break;
         case "ArrowRight":
-          if (game.player.pos.y < playerMap[0].length - 1) game.player.pos.y++;
+          if (game.player.pos.y < game.player.mapView[0].length - 1)
+            game.player.pos.y++;
           game.player.view.style.transform = "scaleX(1)";
           break;
         case "ArrowLeft":
