@@ -10,6 +10,7 @@
   --window-lobby-height: calc(99px * var(--scale));
   --lobby-width: calc(108px * var(--scale));
   --lobby-height: calc(177px * var(--scale));
+  --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
   --fix-player-margin: calc(1.2rem * var(--scale)) 0 0 calc(0.4rem * var(--scale));
   --fix-player-padding: 0 calc(1rem * var(--scale)) 0 0;
@@ -126,8 +127,10 @@ h2 {
 }
 
 #player {
+  width: var(--player-width);
   height: var(--player-height);
   margin: var(--fix-player-margin);
   padding: var(--fix-player-padding);
   position: absolute;
+  z-index: 5;
 }
