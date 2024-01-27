@@ -10,10 +10,9 @@
   --window-lobby-height: calc(99px * var(--scale));
   --lobby-width: calc(108px * var(--scale));
   --lobby-height: calc(177px * var(--scale));
+  --lobby-door-width: calc(75px * var(--scale));
   --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
-  --fix-player-margin: calc(1.2rem * var(--scale)) 0 0 calc(0.4rem * var(--scale));
-  --fix-player-padding: 0 calc(1rem * var(--scale)) 0 0;
   --fix-floor-position: 0
     calc(var(--level-width) - (var(--level-floor-height) / 2));
   --floor-size: calc(398px * var(--scale)), auto;
@@ -49,6 +48,14 @@ h2 {
   background-size: cover;
 }
 
+.window::before {
+  content: "";
+  width: var(--window-width);
+  height: var(--player-height);
+  position: absolute;
+  bottom: 15%;
+}
+
 .window-closed {
   width: var(--window-width);
   height: var(--window-height);
@@ -62,6 +69,15 @@ h2 {
   position: relative;
 }
 
+.lobby::before {
+  content: "";
+  width: var(--lobby-door-width);
+  height: var(--player-height);
+  position: absolute;
+  left: 10%;
+  bottom: 11%;
+}
+
 .lobby::after {
   content: "";
   width: var(--lobby-width);
@@ -72,6 +88,15 @@ h2 {
   left: -6%;
   bottom: 0;
   z-index: 1;
+}
+
+.window-lobby::before {
+  content: "";
+  width: var(--window-lobby-width);
+  height: var(--player-height);
+  left: -7%;
+  bottom: 21%;
+  position: absolute;
 }
 
 .window-lobby::after {
@@ -129,8 +154,6 @@ h2 {
 #player {
   width: var(--player-width);
   height: var(--player-height);
-  margin: var(--fix-player-margin);
-  padding: var(--fix-player-padding);
   position: absolute;
   z-index: 5;
 }

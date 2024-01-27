@@ -99,13 +99,23 @@ function startTime() {
 
 function updatePlayerPosition() {
   try {
-    var posX = game.player.pos.x;
-    var posY = game.player.pos.y;
+    var { x, y } = game.player.pos;
 
-    var { x, y } = game.player.mapView[posX][posY].getBoundingClientRect();
+    var playerView = game.player.view;
+    var windowView = game.player.mapView[x][y];
 
-    game.player.view.style.left = `${x}px`;
-    game.player.view.style.top = `${y}px`;
+    var { width: playerWidth } = playerView.getBoundingClientRect();
+    var { top: windowTop, left: windowLeft } =
+      windowView.getBoundingClientRect();
+    var { top, left, width } = window.getComputedStyle(windowView, "::before");
+
+    var paddingLeft =
+      playerView.style.transform === "scaleX(-1)"
+        ? parseFloat(width) - playerWidth
+        : 0;
+
+    playerView.style.top = `${windowTop + parseFloat(top)}px`;
+    playerView.style.left = `${windowLeft + parseFloat(left) + paddingLeft}px`;
   } finally {
     return game.player.view.getBoundingClientRect();
   }
@@ -126,14 +136,17 @@ function addPlayerController() {
           break;
         case "ArrowUp":
           if (game.player.pos.x > 0) game.player.pos.x--;
+
           break;
         case "ArrowRight":
           if (game.player.pos.y < game.player.mapView[0].length - 1)
             game.player.pos.y++;
+
           game.player.view.style.transform = "scaleX(1)";
           break;
         case "ArrowLeft":
           if (game.player.pos.y > 0) game.player.pos.y--;
+
           game.player.view.style.transform = "scaleX(-1)";
           break;
         default:
