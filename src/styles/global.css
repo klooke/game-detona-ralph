@@ -153,6 +153,8 @@ h2 {
 #player {
   width: var(--player-width);
   height: var(--player-height);
+  transition-property: top, left;
+  transition-timing-function: linear;
   position: absolute;
   z-index: 5;
 }

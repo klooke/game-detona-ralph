@@ -26,6 +26,8 @@ const game = {
       Array.from(document.querySelectorAll("div[id^='wp2']")),
     ],
     pos: { x: 2, y: 0 },
+    velocity: 2.0,
+    isBussy: false,
   },
   enemy: {
     mapView: Array.from(document.querySelectorAll(".window-closed")),
@@ -125,9 +127,17 @@ function updatePlayerPosition() {
     var newPosTop = windowTop + parseFloat(bWindowTop);
     var newPosLeft = windowLeft + parseFloat(bWindowLeft) + paddingLeft;
 
+    var disTop = Math.abs(playerTop - newPosTop);
+    var disLeft = Math.abs(playerLeft - newPosLeft);
+    var duration = parseInt((disTop + disLeft) * game.player.velocity);
+
+    playerView.style.transitionDuration = `${duration}ms`;
     playerView.style.top = `${newPosTop}px`;
     playerView.style.left = `${newPosLeft}px`;
   } finally {
+    setTimeout(() => {
+      game.player.isBussy = false;
+    }, duration);
     return playerView.getBoundingClientRect();
   }
 }
@@ -137,6 +147,8 @@ function addPlayerController() {
     "keydown",
     (event) => {
       event.preventDefault();
+
+      if (game.player.isBussy) return;
 
       switch (event.key) {
         case "ArrowDown":
@@ -164,6 +176,7 @@ function addPlayerController() {
           return;
       }
 
+      game.player.isBussy = true;
       updatePlayerPosition();
     },
     true
