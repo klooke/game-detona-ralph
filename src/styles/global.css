@@ -39,6 +39,7 @@ h2 {
   margin: auto;
   background: url("../../res/sprites/window-low.png") no-repeat left top;
   background-size: cover;
+  position: relative;
 }
 
 .window::before {
