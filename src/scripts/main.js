@@ -125,9 +125,7 @@ function addPlayerController() {
   window.addEventListener(
     "keydown",
     (event) => {
-      if (event.defaultPrevented) {
-        return;
-      }
+      event.preventDefault();
 
       switch (event.key) {
         case "ArrowDown":
@@ -154,7 +152,6 @@ function addPlayerController() {
       }
 
       updatePlayerPosition();
-      event.preventDefault();
     },
     true
   );
