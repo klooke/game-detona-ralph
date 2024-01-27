@@ -13,9 +13,6 @@
   --lobby-door-width: calc(75px * var(--scale));
   --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
-  --fix-floor-position: 0
-    calc(var(--level-width) - (var(--level-floor-height) / 2));
-  --floor-size: calc(398px * var(--scale)), auto;
   --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
@@ -30,10 +27,6 @@
 main {
   height: 100vh;
   background-color: black;
-}
-
-.hidden {
-  opacity: 0;
 }
 
 h2 {
