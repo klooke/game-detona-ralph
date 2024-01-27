@@ -136,6 +136,7 @@ function updatePlayerPosition() {
     playerView.style.left = `${newPosLeft}px`;
   } finally {
     setTimeout(() => {
+      playerView.classList.remove("jump");
       game.player.isBussy = false;
     }, duration);
     return playerView.getBoundingClientRect();
@@ -155,22 +156,26 @@ function addPlayerController() {
           if (game.player.pos.x >= game.player.mapView.length - 1) return;
 
           game.player.pos.x++;
+          game.player.view.classList.add("jump");
           break;
         case "ArrowUp":
           if (game.player.pos.x <= 0) return;
 
           game.player.pos.x--;
+          game.player.view.classList.add("jump");
           break;
         case "ArrowRight":
           if (game.player.pos.y >= game.player.mapView[0].length - 1) return;
 
           game.player.pos.y++;
           game.player.view.classList.remove("flipX");
+          game.player.view.classList.add("jump");
           break;
         case "ArrowLeft":
           if (game.player.pos.y <= 0) return;
 
           game.player.pos.y--;
+          game.player.view.classList.add("flipX", "jump");
           break;
         default:
           return;
