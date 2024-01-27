@@ -100,22 +100,33 @@ function startTime() {
 function updatePlayerPosition() {
   try {
     var { x, y } = game.player.pos;
-
     var playerView = game.player.view;
     var windowView = game.player.mapView[x][y];
 
-    var { width: playerWidth } = playerView.getBoundingClientRect();
+    var {
+      top: playerTop,
+      left: playerLeft,
+      width: playerWidth,
+    } = playerView.getBoundingClientRect();
+    
     var { top: windowTop, left: windowLeft } =
       windowView.getBoundingClientRect();
-    var { top, left, width } = window.getComputedStyle(windowView, "::before");
 
-    var paddingLeft =
-      playerView.style.transform === "scaleX(-1)"
-        ? parseFloat(width) - playerWidth
-        : 0;
+    var {
+      top: bWindowTop,
+      left: bWindowLeft,
+      width: bWindowWidth,
+    } = window.getComputedStyle(windowView, "::before");
 
-    playerView.style.top = `${windowTop + parseFloat(top)}px`;
-    playerView.style.left = `${windowLeft + parseFloat(left) + paddingLeft}px`;
+    var paddingLeft = playerView.classList.contains("flipX")
+      ? parseFloat(bWindowWidth) - playerWidth
+      : 0;
+
+    var newPosTop = windowTop + parseFloat(bWindowTop);
+    var newPosLeft = windowLeft + parseFloat(bWindowLeft) + paddingLeft;
+
+    playerView.style.top = `${newPosTop}px`;
+    playerView.style.left = `${newPosLeft}px`;
   } finally {
     return playerView.getBoundingClientRect();
   }
@@ -129,23 +140,25 @@ function addPlayerController() {
 
       switch (event.key) {
         case "ArrowDown":
-          if (game.player.pos.x < game.player.mapView.length - 1)
-            game.player.pos.x++;
+          if (game.player.pos.x >= game.player.mapView.length - 1) return;
+
+          game.player.pos.x++;
           break;
         case "ArrowUp":
-          if (game.player.pos.x > 0) game.player.pos.x--;
+          if (game.player.pos.x <= 0) return;
 
+          game.player.pos.x--;
           break;
         case "ArrowRight":
-          if (game.player.pos.y < game.player.mapView[0].length - 1)
-            game.player.pos.y++;
+          if (game.player.pos.y >= game.player.mapView[0].length - 1) return;
 
-          game.player.view.style.transform = "scaleX(1)";
+          game.player.pos.y++;
+          game.player.view.classList.remove("flipX");
           break;
         case "ArrowLeft":
-          if (game.player.pos.y > 0) game.player.pos.y--;
+          if (game.player.pos.y <= 0) return;
 
-          game.player.view.style.transform = "scaleX(-1)";
+          game.player.pos.y--;
           break;
         default:
           return;
