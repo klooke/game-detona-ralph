@@ -117,7 +117,7 @@ function updatePlayerPosition() {
     playerView.style.top = `${windowTop + parseFloat(top)}px`;
     playerView.style.left = `${windowLeft + parseFloat(left) + paddingLeft}px`;
   } finally {
-    return game.player.view.getBoundingClientRect();
+    return playerView.getBoundingClientRect();
   }
 }
 
