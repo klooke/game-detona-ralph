@@ -110,7 +110,7 @@ function updatePlayerPosition() {
       left: playerLeft,
       width: playerWidth,
     } = playerView.getBoundingClientRect();
-    
+
     var { top: windowTop, left: windowLeft } =
       windowView.getBoundingClientRect();
 
@@ -131,13 +131,17 @@ function updatePlayerPosition() {
     var disLeft = Math.abs(playerLeft - newPosLeft);
     var duration = parseInt((disTop + disLeft) * game.player.velocity);
 
+    game.player.isBussy = true;
+
+    playerView.classList.add("jump");
     playerView.style.transitionDuration = `${duration}ms`;
     playerView.style.top = `${newPosTop}px`;
     playerView.style.left = `${newPosLeft}px`;
   } finally {
     setTimeout(() => {
-      playerView.classList.remove("jump");
       game.player.isBussy = false;
+
+      playerView.classList.remove("jump");
     }, duration);
     return playerView.getBoundingClientRect();
   }
@@ -153,36 +157,38 @@ function addPlayerController() {
 
       switch (event.key) {
         case "ArrowDown":
-          if (game.player.pos.x >= game.player.mapView.length - 1) return;
+          if (game.player.pos.x >= game.player.mapView.length - 1) break;
 
           game.player.pos.x++;
-          game.player.view.classList.add("jump");
+
+          updatePlayerPosition();
           break;
         case "ArrowUp":
-          if (game.player.pos.x <= 0) return;
+          if (game.player.pos.x <= 0) break;
 
           game.player.pos.x--;
-          game.player.view.classList.add("jump");
+
+          updatePlayerPosition();
           break;
         case "ArrowRight":
-          if (game.player.pos.y >= game.player.mapView[0].length - 1) return;
+          if (game.player.pos.y >= game.player.mapView[0].length - 1) break;
 
           game.player.pos.y++;
           game.player.view.classList.remove("flipX");
-          game.player.view.classList.add("jump");
+
+          updatePlayerPosition();
           break;
         case "ArrowLeft":
-          if (game.player.pos.y <= 0) return;
+          if (game.player.pos.y <= 0) break;
 
           game.player.pos.y--;
-          game.player.view.classList.add("flipX", "jump");
+          game.player.view.classList.add("flipX");
+
+          updatePlayerPosition();
           break;
         default:
-          return;
+          break;
       }
-
-      game.player.isBussy = true;
-      updatePlayerPosition();
     },
     true
   );
