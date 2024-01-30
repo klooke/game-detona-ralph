@@ -28,6 +28,8 @@ const game = {
     pos: { x: 2, y: 0 },
     velocity: 2.0,
     isBussy: false,
+    timeFixingID: null,
+    timeFixing: 1400, //ms
   },
   enemy: {
     mapView: Array.from(document.querySelectorAll(".window-closed")),
@@ -186,12 +188,32 @@ function addPlayerController() {
 
           updatePlayerPosition();
           break;
+        case "e":
+          if (!windowIsBreak(game.player.pos)) break;
+
+          fixWindows(game.player.pos);
+          break;
         default:
           break;
       }
     },
     true
   );
+  window.addEventListener("keyup", (event) => {
+    event.preventDefault();
+
+    if (!game.player.isBussy) return;
+
+    switch (event.key) {
+      case "e":
+        game.player.isBussy = false;
+
+        clearInterval(game.player.timeFixingID);
+        break;
+      default:
+        break;
+    }
+  });
 }
 
 function breakWindows() {
@@ -208,3 +230,18 @@ function breakWindows() {
     }px`;
   }
 }
+
+function windowIsBreak({ x, y }) {
+  return game.player.mapView[x][y].style.backgroundPositionX !== "";
+}
+
+function fixWindows({ x, y }) {
+  game.player.isBussy = true;
+
+  game.player.timeFixingID = setTimeout(() => {
+    game.player.isBussy = false;
+
+    game.player.mapView[x][y].style.backgroundPositionX = "";
+  }, game.player.timeFixing);
+}
+
