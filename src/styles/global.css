@@ -13,6 +13,7 @@
   --lobby-door-width: calc(75px * var(--scale));
   --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
+  --player-width-fixing: calc(94px * var(--scale));
   --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
@@ -174,4 +175,24 @@ h2 {
   80% {
     background-position: calc(var(--player-width) * -1);
   }
+}
+
+#player.fixing {
+  width: var(--player-width-fixing);
+  animation: playerFixing 250ms step-start infinite;
+}
+
+@keyframes playerFixing {
+  50% {
+    background-position: calc(var(--player-width) * -4);
+  }
+  100% {
+    background-position: calc(
+      (var(--player-width) * -4) - var(--player-width-fixing)
+    );
+  }
+}
+
+#player.flipX.fixing {
+  margin-left: calc(var(--player-width) * -1);
 }

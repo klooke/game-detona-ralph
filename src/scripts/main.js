@@ -208,6 +208,8 @@ function addPlayerController() {
       case "e":
         game.player.isBussy = false;
 
+        game.player.view.classList.remove("fixing");
+
         clearInterval(game.player.timeFixingID);
         break;
       default:
@@ -238,8 +240,12 @@ function windowIsBreak({ x, y }) {
 function fixWindows({ x, y }) {
   game.player.isBussy = true;
 
+  game.player.view.classList.add("fixing");
+
   game.player.timeFixingID = setTimeout(() => {
     game.player.isBussy = false;
+
+    game.player.view.classList.remove("fixing");
 
     game.player.mapView[x][y].style.backgroundPositionX = "";
   }, game.player.timeFixing);
