@@ -193,3 +193,18 @@ function addPlayerController() {
     true
   );
 }
+
+function breakWindows() {
+  var windows = document.querySelectorAll(".window");
+
+  for (var w of windows) {
+    var { width: wWidth } = w.getBoundingClientRect();
+
+    var randTop = Math.round(Math.random() + 1);
+    var randBottom = Math.round(Math.random() + 1);
+
+    w.style.backgroundPositionX = `${wWidth * -randTop}px, ${
+      wWidth * -randBottom
+    }px`;
+  }
+}

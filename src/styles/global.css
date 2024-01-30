@@ -38,8 +38,10 @@ h2 {
   width: var(--window-width);
   height: var(--window-height);
   margin: auto;
-  background: url("../../res/sprites/window-low.png") no-repeat left top;
-  background-size: cover;
+  background: url("../../res/sprites/window-top.png") no-repeat,
+    url("../../res/sprites/window-bottom.png") no-repeat;
+  background-size: auto 50%, auto 50%;
+  background-position: left top, left bottom;
   position: relative;
 }
 
