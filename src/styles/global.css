@@ -16,6 +16,9 @@
   --player-width-fixing: calc(94px * var(--scale));
   --enemy-width: calc(124px * var(--scale));
   --enemy-height: calc(160px * var(--scale));
+  --enemy-width-wreck: calc(182px * var(--scale));
+  --wreckage-width: calc(33px * var(--scale));
+  --wreckage-height: calc(72px * var(--scale));
   --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
@@ -223,3 +226,30 @@ h2 {
   }
 }
 
+#enemy.wreck {
+  width: var(--enemy-width-wreck);
+  animation: enemyWreck 350ms step-start infinite;
+  margin-left: calc(-30px * var(--scale));
+}
+
+@keyframes enemyWreck {
+  50% {
+    background-position: calc(var(--enemy-width) * -3);
+  }
+  100% {
+    background-position: calc(
+      (var(--enemy-width) * -3) - var(--enemy-width-wreck)
+    );
+  }
+}
+
+.wreckage {
+  width: var(--wreckage-width);
+  height: var(--wreckage-height);
+  background: url("../../res/sprites/wreckage.png") no-repeat center;
+  background-size: cover;
+  transition-property: top, left;
+  transition-timing-function: linear;
+  position: absolute;
+  z-index: 5;
+}

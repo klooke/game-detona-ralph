@@ -36,6 +36,7 @@ const game = {
     mapView: Array.from(document.querySelectorAll(".window-closed")),
     posX: 0,
     velocity: 0.2,
+    wreckDuration: 500, //ms
   },
 };
 
@@ -191,8 +192,55 @@ function updateEnemyPosition() {
   } finally {
     setTimeout(() => {
       enemyView.classList.remove("move");
+      enemyWreckIt();
     }, duration);
     return enemyView.getBoundingClientRect();
+  }
+}
+
+function enemyWreckIt() {
+  game.enemy.view.classList.add("wreck");
+
+  setTimeout(() => {
+    game.enemy.view.classList.remove("wreck");
+    updateEnemyPosition();
+  }, game.enemy.wreckDuration);
+
+  requestAnimationFrame(throwWreck);
+}
+
+function throwWreck() {
+  var {
+    x: enemyX,
+    y: enemyY,
+    width: enemyWidth,
+    height: enemyHeight,
+  } = game.enemy.view.getBoundingClientRect();
+
+  var { bottom: endPos } = document.body
+    .querySelector("#level")
+    .getBoundingClientRect();
+
+  var iniPosTop = enemyY + enemyHeight;
+  var iniPosLeft = enemyX + enemyWidth / 2;
+
+  var wreck = document.createElement("div");
+  wreck.classList.add("wreckage");
+  wreck.style.top = `${iniPosTop}px`;
+  wreck.style.left = `${iniPosLeft}px`;
+
+  document.body.querySelector("main").appendChild(wreck);
+
+  requestAnimationFrame(() => {
+    var distance = Math.abs(iniPosTop - endPos);
+    var duration = parseInt(distance / game.wreckage.velocity);
+
+    wreck.style.transitionDuration = `${duration}ms`;
+    wreck.style.top = `${endPos}px`;
+  });
+
+  wreck.addEventListener("transitionend", () => wreck.remove());
+}
 }
 
 function addPlayerController() {
