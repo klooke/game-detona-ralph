@@ -34,7 +34,8 @@ const game = {
   enemy: {
     view: document.querySelector("#enemy"),
     mapView: Array.from(document.querySelectorAll(".window-closed")),
-    posX: 4,
+    posX: 0,
+    velocity: 0.2,
   },
 };
 
@@ -152,9 +153,17 @@ function updatePlayerPosition() {
 }
 
 function updateEnemyPosition() {
-    var x = game.enemy.posX;
+  try {
+    var randPosX = parseInt(Math.random() * game.enemy.mapView.length);
+
+    var x =
+      randPosX === game.enemy.posX
+        ? (randPosX + 1) % game.enemy.mapView.length
+        : randPosX;
     var enemyView = game.enemy.view;
     var windowView = game.enemy.mapView[x];
+
+    game.enemy.posX = x;
 
     var {
       top: enemyTop,
@@ -170,8 +179,19 @@ function updateEnemyPosition() {
 
     var newPosTop = windowBottom - enemyHeight;
     var newPosLeft = windowLeft - windowWidth / 2;
+
+    var disTop = Math.abs(enemyTop - newPosTop);
+    var disLeft = Math.abs(enemyLeft - newPosLeft);
+    var duration = parseInt((disTop + disLeft) / game.enemy.velocity);
+
+    enemyView.classList.add("move");
+    enemyView.style.transitionDuration = `${duration}ms`;
     enemyView.style.top = `${newPosTop}px`;
     enemyView.style.left = `${newPosLeft}px`;
+  } finally {
+    setTimeout(() => {
+      enemyView.classList.remove("move");
+    }, duration);
     return enemyView.getBoundingClientRect();
 }
 

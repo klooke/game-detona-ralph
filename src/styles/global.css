@@ -14,8 +14,8 @@
   --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
   --player-width-fixing: calc(94px * var(--scale));
-  --enemy-width: calc(141px * var(--scale));
-  --enemy-height: calc(175px * var(--scale));
+  --enemy-width: calc(124px * var(--scale));
+  --enemy-height: calc(160px * var(--scale));
   --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
@@ -204,7 +204,22 @@ h2 {
   height: var(--enemy-height);
   background: url("../../res/sprites/enemy.png") no-repeat left center;
   background-size: cover;
+  transition-property: top, left;
+  transition-timing-function: linear;
   position: absolute;
   z-index: 5;
+}
+
+#enemy.move {
+  animation: enemyMove 550ms step-start infinite;
+}
+
+@keyframes enemyMove {
+  50% {
+    background-position: calc(var(--enemy-width) * -1);
+  }
+  100% {
+    background-position: calc(var(--enemy-width) * -2);
+  }
 }
 
