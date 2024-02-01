@@ -26,10 +26,10 @@ const game = {
       Array.from(document.querySelectorAll("div[id^='wp2']")),
     ],
     pos: { x: 2, y: 0 },
-    velocity: 2.0,
+    velocity: 0.5,
     isBussy: false,
     timeFixingID: null,
-    timeFixing: 1400, //ms
+    timeFixing: 500, //ms
   },
   enemy: {
     view: document.querySelector("#enemy"),
@@ -133,7 +133,7 @@ function updatePlayerPosition() {
 
     var disTop = Math.abs(playerTop - newPosTop);
     var disLeft = Math.abs(playerLeft - newPosLeft);
-    var duration = parseInt((disTop + disLeft) * game.player.velocity);
+    var duration = parseInt((disTop + disLeft) / game.player.velocity);
 
     game.player.isBussy = true;
 
