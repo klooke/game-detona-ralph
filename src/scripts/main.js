@@ -32,7 +32,9 @@ const game = {
     timeFixing: 1400, //ms
   },
   enemy: {
+    view: document.querySelector("#enemy"),
     mapView: Array.from(document.querySelectorAll(".window-closed")),
+    posX: 4,
   },
 };
 
@@ -147,6 +149,30 @@ function updatePlayerPosition() {
     }, duration);
     return playerView.getBoundingClientRect();
   }
+}
+
+function updateEnemyPosition() {
+    var x = game.enemy.posX;
+    var enemyView = game.enemy.view;
+    var windowView = game.enemy.mapView[x];
+
+    var {
+      top: enemyTop,
+      left: enemyLeft,
+      height: enemyHeight,
+    } = enemyView.getBoundingClientRect();
+
+    var {
+      left: windowLeft,
+      bottom: windowBottom,
+      width: windowWidth,
+    } = windowView.getBoundingClientRect();
+
+    var newPosTop = windowBottom - enemyHeight;
+    var newPosLeft = windowLeft - windowWidth / 2;
+    enemyView.style.top = `${newPosTop}px`;
+    enemyView.style.left = `${newPosLeft}px`;
+    return enemyView.getBoundingClientRect();
 }
 
 function addPlayerController() {

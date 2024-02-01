@@ -14,6 +14,8 @@
   --player-width: calc(48px * var(--scale));
   --player-height: calc(86px * var(--scale));
   --player-width-fixing: calc(94px * var(--scale));
+  --enemy-width: calc(141px * var(--scale));
+  --enemy-height: calc(175px * var(--scale));
   --fix-window-padding: 0 calc(50px * var(--scale));
 }
 
@@ -196,3 +198,13 @@ h2 {
 #player.flipX.fixing {
   margin-left: calc(var(--player-width) * -1);
 }
+
+#enemy {
+  width: var(--enemy-width);
+  height: var(--enemy-height);
+  background: url("../../res/sprites/enemy.png") no-repeat left center;
+  background-size: cover;
+  position: absolute;
+  z-index: 5;
+}
+
