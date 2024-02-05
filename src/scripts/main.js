@@ -88,21 +88,28 @@ function updateHiscore() {
   return game.hiscore;
 }
 
+function updateTime() {
+  var time = game.time.value;
+
+  game.time.view.textContent = String(time).padStart(2, "0");
+
+  if (time <= 0) clearInterval(game.time.id);
+  else time--;
+
+  game.time.value = time;
+}
+
 function startTime() {
   if (game.time.id) return game.time;
 
-  game.time.id = setInterval(() => {
-    var time = game.time.value;
-
-    game.time.view.textContent = String(time).padStart(2, "0");
-
-    if (time <= 0) clearInterval(game.time.id);
-    else time--;
-
-    game.time.value = time;
-  }, 1000);
+  updateTime();
+  
+  game.time.id = setInterval(updateTime, 1000);
 
   return game.time;
+
+
+
 }
 
 function updatePlayerPosition() {
