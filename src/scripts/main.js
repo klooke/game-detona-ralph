@@ -18,16 +18,19 @@ const game = {
     limit: 5,
     value: 3,
   },
-  player: {
-    view: document.querySelector("#player"),
-    mapView: [
+  map: {
+    view: [
+      Array.from(document.querySelectorAll(".window-closed")),
       Array.from(document.querySelectorAll("div[id^='wp0']")),
       Array.from(document.querySelectorAll("div[id^='wp1']")),
       Array.from(document.querySelectorAll("div[id^='wp2']")),
     ],
-    pos: { x: 2, y: 0 },
+  },
+  player: {
+    view: document.querySelector("#player"),
+    isBusy: false,
+    pos: { x: 3, y: 0, minX: 1, maxX: 3, minY: 0, maxY: 4 },
     velocity: 0.5,
-    isBussy: false,
     timeFixingID: null,
     timeFixing: 500, //ms
   },
@@ -103,62 +106,81 @@ function startTime() {
   if (game.time.id) return game.time;
 
   updateTime();
-  
+
   game.time.id = setInterval(updateTime, 1000);
 
   return game.time;
-
-
-
 }
 
-function updatePlayerPosition() {
-    var { x, y } = game.player.pos;
-    var playerView = game.player.view;
-    var windowView = game.player.mapView[x][y];
+function getWindowPosition({ x, y }) {
+  var windowView = game.map.view[x][y];
+  var windowRect = windowView.getBoundingClientRect();
 
-    var {
-      top: playerTop,
-      left: playerLeft,
-      width: playerWidth,
-    } = playerView.getBoundingClientRect();
+  var { top: bWindowTop, left: bWindowLeft } = window.getComputedStyle(
+    windowView,
+    "::before"
+  );
 
-    var { top: windowTop, left: windowLeft } =
-      windowView.getBoundingClientRect();
+  windowRect.x += parseFloat(bWindowLeft) || 0;
+  windowRect.y += parseFloat(bWindowTop) || 0;
 
-    var {
-      top: bWindowTop,
-      left: bWindowLeft,
-      width: bWindowWidth,
-    } = window.getComputedStyle(windowView, "::before");
+  return windowRect;
+}
 
-    var paddingLeft = playerView.classList.contains("flipX")
-      ? parseFloat(bWindowWidth) - playerWidth
-      : 0;
+function spawnPlayer() {
+  var playerView = game.player.view;
 
-    var newPosTop = windowTop + parseFloat(bWindowTop);
-    var newPosLeft = windowLeft + parseFloat(bWindowLeft) + paddingLeft;
-
-    var disTop = Math.abs(playerTop - newPosTop);
-    var disLeft = Math.abs(playerLeft - newPosLeft);
-    var duration = parseInt((disTop + disLeft) / game.player.velocity);
-
-    game.player.isBussy = true;
-
-    playerView.classList.add("jump");
-    playerView.style.transitionDuration = `${duration}ms`;
-    playerView.style.top = `${newPosTop}px`;
-    playerView.style.left = `${newPosLeft}px`;
+  playerView.addEventListener(
+    "animationstart",
+    () => (game.player.isBusy = true)
+  );
 
   playerView.addEventListener("animationend", () => {
-    if (playerView.classList.contains("fixing")) {
+    if (playerView.classList.contains("fixing"))
       game.map.view[x][y].style.backgroundPositionX = "";
-    }
 
     playerView.classList.remove("jump");
-    playerView.classList.remove("fixing");
+
     game.player.isBusy = false;
   });
+
+  var { top: newPosTop, left: newPosLeft } = getWindowPosition(game.player.pos);
+
+  playerView.style.top = `${newPosTop}px`;
+  playerView.style.left = `${newPosLeft}px`;
+
+  addPlayerController();
+}
+
+function movePlayer() {
+  var playerView = game.player.view;
+
+  var {
+    top: playerTop,
+    left: playerLeft,
+    width: playerWidth,
+  } = playerView.getBoundingClientRect();
+
+  var {
+    top: newPosTop,
+    left: newPosLeft,
+    right: newPosRight,
+  } = getWindowPosition(game.player.pos);
+
+  newPosLeft = playerView.classList.contains("flipX")
+    ? newPosRight - playerWidth
+    : newPosLeft;
+
+  var distanceX = Math.abs(playerLeft - newPosLeft);
+  var distanceY = Math.abs(playerTop - newPosTop);
+  var duration = parseInt((distanceY + distanceX) / game.player.velocity);
+
+  playerView.classList.add("jump");
+  playerView.style.transitionDuration = `${duration}ms`;
+  playerView.style.top = `${newPosTop}px`;
+  playerView.style.left = `${newPosLeft}px`;
+
+  return playerView.getBoundingClientRect();
 }
 
 function updateEnemyPosition() {
@@ -252,69 +274,48 @@ function throwWreck() {
 }
 
 function addPlayerController() {
-  window.addEventListener(
-    "keydown",
-    (event) => {
-      event.preventDefault();
-
-      if (game.player.isBussy) return;
-
-      switch (event.key) {
-        case "ArrowDown":
-          if (game.player.pos.x >= game.player.mapView.length - 1) break;
-
-          game.player.pos.x++;
-
-          updatePlayerPosition();
-          break;
-        case "ArrowUp":
-          if (game.player.pos.x <= 0) break;
-
-          game.player.pos.x--;
-
-          updatePlayerPosition();
-          break;
-        case "ArrowRight":
-          if (game.player.pos.y >= game.player.mapView[0].length - 1) break;
-
-          game.player.pos.y++;
-          game.player.view.classList.remove("flipX");
-
-          updatePlayerPosition();
-          break;
-        case "ArrowLeft":
-          if (game.player.pos.y <= 0) break;
-
-          game.player.pos.y--;
-          game.player.view.classList.add("flipX");
-
-          updatePlayerPosition();
-          break;
-        case "e":
-          if (!windowIsBreak(game.player.pos)) break;
-
-          fixWindows(game.player.pos);
-          break;
-        default:
-          break;
-      }
-    },
-    true
-  );
-  window.addEventListener("keyup", (event) => {
+  window.addEventListener("keydown", (event) => {
     event.preventDefault();
 
-    if (!game.player.isBussy) return;
+    if (game.player.isBusy) return;
 
     switch (event.key) {
-      case "e":
-        game.player.isBussy = false;
+      case "ArrowDown":
+        if (game.player.pos.x >= game.player.pos.maxX) break;
 
-        game.player.view.classList.remove("fixing");
+        game.player.pos.x++;
 
-        clearInterval(game.player.timeFixingID);
+        movePlayer();
         break;
-      default:
+      case "ArrowUp":
+        if (game.player.pos.x <= game.player.pos.minX) break;
+
+        game.player.pos.x--;
+
+        movePlayer();
+        break;
+      case "ArrowRight":
+        if (game.player.pos.y >= game.player.pos.maxY) break;
+
+        game.player.view.classList.remove("flipX");
+        game.player.pos.y++;
+
+        movePlayer();
+        break;
+      case "ArrowLeft":
+        if (game.player.pos.y <= game.player.pos.minY) break;
+
+        game.player.view.classList.add("flipX");
+        game.player.pos.y--;
+
+        movePlayer();
+        break;
+      case "e":
+        if (!windowIsBreak(game.player.pos)) break;
+
+        game.player.isBusy = true;
+
+        game.player.view.classList.add("fixing");
         break;
     }
   });
@@ -336,12 +337,17 @@ function breakWindows() {
 }
 
 function windowIsBreak({ x, y }) {
-  return game.player.mapView[x][y].style.backgroundPositionX !== "";
+  return game.map.view[x][y].style.backgroundPositionX !== "";
 }
 
 function fixWindows({ x, y }) {
-  game.player.isBussy = true;
+  game.player.isBusy = true;
 
   game.player.view.classList.add("fixing");
 }
 
+function main() {
+  spawnPlayer();
+}
+
+main();
