@@ -184,51 +184,6 @@ function movePlayer() {
   return playerView.getBoundingClientRect();
 }
 
-function updateEnemyPosition() {
-  try {
-    var randPosX = parseInt(Math.random() * game.enemy.mapView.length);
-
-    var x =
-      randPosX === game.enemy.posX
-        ? (randPosX + 1) % game.enemy.mapView.length
-        : randPosX;
-    var enemyView = game.enemy.view;
-    var windowView = game.enemy.mapView[x];
-
-    game.enemy.posX = x;
-
-    var {
-      top: enemyTop,
-      left: enemyLeft,
-      height: enemyHeight,
-    } = enemyView.getBoundingClientRect();
-
-    var {
-      left: windowLeft,
-      bottom: windowBottom,
-      width: windowWidth,
-    } = windowView.getBoundingClientRect();
-
-    var newPosTop = windowBottom - enemyHeight;
-    var newPosLeft = windowLeft - windowWidth / 2;
-
-    var disTop = Math.abs(enemyTop - newPosTop);
-    var disLeft = Math.abs(enemyLeft - newPosLeft);
-    var duration = parseInt((disTop + disLeft) / game.enemy.velocity);
-
-    enemyView.classList.add("move");
-    enemyView.style.transitionDuration = `${duration}ms`;
-    enemyView.style.top = `${newPosTop}px`;
-    enemyView.style.left = `${newPosLeft}px`;
-  } finally {
-    setTimeout(() => {
-      enemyView.classList.remove("move");
-      enemyWreckIt();
-    }, duration);
-    return enemyView.getBoundingClientRect();
-  }
-}
-
 function spawnEnemy() {
   var enemyView = game.enemy.view;
 
@@ -241,7 +196,7 @@ function spawnEnemy() {
   enemyView.addEventListener("animationend", () => {
     game.enemy.view.classList.remove("wreck");
 
-    updateEnemyPosition();
+    moveEnemy();
   });
 
   var { height: enemyHeight } = enemyView.getBoundingClientRect();
@@ -258,9 +213,57 @@ function spawnEnemy() {
   enemyView.style.top = `${newPosTop}px`;
   enemyView.style.left = `${newPosLeft}px`;
 
-  requestAnimationFrame(updateEnemyPosition);
+  requestAnimationFrame(moveEnemy);
 }
 
+function randomEnemyNextPosition() {
+  var enemyView = game.enemy.view;
+  var randPosX = parseInt(Math.random() * game.map.view[0].length);
+
+  var y =
+    randPosX === game.enemy.pos.y
+      ? (randPosX + 1) % game.map.view[0].length
+      : randPosX;
+
+  if (game.enemy.pos.y > y) enemyView.classList.add("flipX");
+  else enemyView.classList.remove("flipX");
+
+  game.enemy.pos.y = y;
+
+  return game.enemy.pos;
+}
+
+function moveEnemy() {
+  var enemyView = game.enemy.view;
+
+  var {
+    top: enemyTop,
+    left: enemyLeft,
+    height: enemyHeight,
+  } = enemyView.getBoundingClientRect();
+
+  randomEnemyNextPosition();
+
+  var {
+    left: windowLeft,
+    bottom: windowBottom,
+    width: windowWidth,
+  } = getWindowPosition(game.enemy.pos);
+
+  var newPosTop = windowBottom - enemyHeight;
+  var newPosLeft = windowLeft - windowWidth / 2;
+
+  var distanceY = Math.abs(enemyTop - newPosTop);
+  var distanceX = Math.abs(enemyLeft - newPosLeft);
+  var duration = parseInt((distanceY + distanceX) / game.enemy.velocity);
+
+  enemyView.classList.add("move");
+  enemyView.style.transitionDuration = `${duration}ms`;
+  enemyView.style.top = `${newPosTop}px`;
+  enemyView.style.left = `${newPosLeft}px`;
+
+  return enemyView.getBoundingClientRect();
+}
 
 function enemyWreckIt() {
   game.enemy.view.classList.add("wreck");
