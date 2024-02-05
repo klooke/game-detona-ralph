@@ -37,8 +37,10 @@ const game = {
   enemy: {
     view: document.querySelector("#enemy"),
     pos: { x: 0, y: 0 },
+    velocity: 0.1,
+  },
+  wreckage: {
     velocity: 0.2,
-    wreckDuration: 500, //ms
   },
 };
 
@@ -268,25 +270,29 @@ function enemyWreckIt() {
 
 function throwWreck() {
   var {
-    x: enemyX,
-    y: enemyY,
-    width: enemyWidth,
-    height: enemyHeight,
-  } = game.enemy.view.getBoundingClientRect();
+    left: windowLeft,
+    bottom: windowBottom,
+    width: windowWidth,
+  } = getWindowPosition(game.enemy.pos);
 
   var { bottom: endPos } = document.body
     .querySelector("#level")
     .getBoundingClientRect();
 
-  var iniPosTop = enemyY + enemyHeight;
-  var iniPosLeft = enemyX + enemyWidth / 2;
-
   var wreck = document.createElement("div");
   wreck.classList.add("wreckage");
+
+  document.body.querySelector("main").appendChild(wreck);
+
+  var { width: wreckWidth } = wreck.getBoundingClientRect();
+
+  var iniPosTop = windowBottom;
+  var iniPosLeft = windowLeft + (windowWidth / 2 - wreckWidth / 2);
+
   wreck.style.top = `${iniPosTop}px`;
   wreck.style.left = `${iniPosLeft}px`;
 
-  document.body.querySelector("main").appendChild(wreck);
+  wreck.addEventListener("transitionend", () => wreck.remove());
 
   requestAnimationFrame(() => {
     var distance = Math.abs(iniPosTop - endPos);
@@ -295,8 +301,8 @@ function throwWreck() {
     wreck.style.transitionDuration = `${duration}ms`;
     wreck.style.top = `${endPos}px`;
   });
+}
 
-  wreck.addEventListener("transitionend", () => wreck.remove());
 }
 }
 
