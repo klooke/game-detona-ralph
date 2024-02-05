@@ -113,7 +113,6 @@ function startTime() {
 }
 
 function updatePlayerPosition() {
-  try {
     var { x, y } = game.player.pos;
     var playerView = game.player.view;
     var windowView = game.player.mapView[x][y];
@@ -150,14 +149,16 @@ function updatePlayerPosition() {
     playerView.style.transitionDuration = `${duration}ms`;
     playerView.style.top = `${newPosTop}px`;
     playerView.style.left = `${newPosLeft}px`;
-  } finally {
-    setTimeout(() => {
-      game.player.isBussy = false;
 
-      playerView.classList.remove("jump");
-    }, duration);
-    return playerView.getBoundingClientRect();
-  }
+  playerView.addEventListener("animationend", () => {
+    if (playerView.classList.contains("fixing")) {
+      game.map.view[x][y].style.backgroundPositionX = "";
+    }
+
+    playerView.classList.remove("jump");
+    playerView.classList.remove("fixing");
+    game.player.isBusy = false;
+  });
 }
 
 function updateEnemyPosition() {
@@ -342,13 +343,5 @@ function fixWindows({ x, y }) {
   game.player.isBussy = true;
 
   game.player.view.classList.add("fixing");
-
-  game.player.timeFixingID = setTimeout(() => {
-    game.player.isBussy = false;
-
-    game.player.view.classList.remove("fixing");
-
-    game.player.mapView[x][y].style.backgroundPositionX = "";
-  }, game.player.timeFixing);
 }
 
