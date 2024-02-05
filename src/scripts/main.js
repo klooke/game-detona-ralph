@@ -138,6 +138,7 @@ function spawnPlayer() {
     if (playerView.classList.contains("fixing")) fixWindows();
 
     playerView.classList.remove("jump");
+    playerView.classList.remove("take-damage");
     playerView.classList.remove("fixing");
 
     game.player.isBusy = false;
@@ -299,6 +300,7 @@ function throwWreck() {
   wreck.style.top = `${iniPosTop}px`;
   wreck.style.left = `${iniPosLeft}px`;
 
+  wreck.addEventListener("transitionstart", () => collidedWithPlayer(wreck));
   wreck.addEventListener("transitionend", () => wreck.remove());
 
   requestAnimationFrame(() => {
@@ -310,7 +312,26 @@ function throwWreck() {
   });
 }
 
+function collidedWithPlayer(view) {
+  if (isPlayerCollidedWith(view.getBoundingClientRect())) {
+    game.player.isBusy = true;
+
+    game.player.view.classList.add("take-damage");
+    return;
+  }
+
+  requestAnimationFrame(() => collidedWithPlayer(view));
 }
+
+function isPlayerCollidedWith(rect) {
+  var playerRect = game.player.view.getBoundingClientRect();
+
+  return (
+    rect.left <= playerRect.right &&
+    rect.right >= playerRect.left &&
+    rect.top <= playerRect.bottom &&
+    rect.bottom >= playerRect.top
+  );
 }
 
 function addPlayerController() {
