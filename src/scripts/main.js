@@ -2,7 +2,7 @@ const game = {
   score: {
     view: document.querySelector("#score"),
     limit: 9999999,
-    points: 0,
+    value: 0,
   },
   time: {
     view: document.querySelector("#time"),
@@ -14,9 +14,9 @@ const game = {
     value: 0,
   },
   life: {
-    view: document.querySelector("#life"),
+    view: document.querySelectorAll("#life > img"),
     limit: 5,
-    count: 3,
+    value: 3,
   },
   player: {
     view: document.querySelector("#player"),
@@ -41,26 +41,26 @@ const game = {
 };
 
 function addScore(value = 0) {
-  var score = game.score.points;
+  var score = game.score.value;
   score += value;
 
   if (score < 0) score = 0;
   else if (score > game.score.limit) score = game.score.limit;
 
   game.score.view.textContent = String(score).padStart(7, "0");
-  game.score.points = score;
+  game.score.value = score;
 
   return game.score;
 }
 
-function updateLife(value = 0) {
-  var lifeCount = game.life.count;
+function addLife(value = 0) {
+  var lifeCount = game.life.value;
+  var lifeMenu = game.life.view;
+
   lifeCount += value;
 
   if (lifeCount < 0) lifeCount = 0;
   else if (lifeCount > game.life.limit) lifeCount = game.life.limit;
-
-  var lifeMenu = Array.from(game.life.view.getElementsByTagName("img"));
 
   for (i = 0; i < lifeMenu.length; i++) {
     if (lifeCount > i) {
@@ -71,15 +71,15 @@ function updateLife(value = 0) {
     lifeMenu[i].hidden = true;
   }
 
-  game.life.count = lifeCount;
+  game.life.value = lifeCount;
 
   return game.life;
 }
 
 function updateHiscore() {
   var hiscore =
-    game.score.points > game.hiscore.value
-      ? game.score.points
+    game.score.value > game.hiscore.value
+      ? game.score.value
       : game.hiscore.value;
 
   game.hiscore.view.textContent = String(hiscore).padStart(7, "0");
