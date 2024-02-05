@@ -31,8 +31,6 @@ const game = {
     isBusy: false,
     pos: { x: 3, y: 0, minX: 1, maxX: 3, minY: 0, maxY: 4 },
     velocity: 0.5,
-    timeFixingID: null,
-    timeFixing: 500, //ms
   },
   enemy: {
     view: document.querySelector("#enemy"),
@@ -137,10 +135,10 @@ function spawnPlayer() {
   );
 
   playerView.addEventListener("animationend", () => {
-    if (playerView.classList.contains("fixing"))
-      game.map.view[x][y].style.backgroundPositionX = "";
+    if (playerView.classList.contains("fixing")) fixWindows();
 
     playerView.classList.remove("jump");
+    playerView.classList.remove("fixing");
 
     game.player.isBusy = false;
   });
@@ -182,6 +180,12 @@ function movePlayer() {
   playerView.style.left = `${newPosLeft}px`;
 
   return playerView.getBoundingClientRect();
+}
+
+function fixWindows() {
+  var { x, y } = game.player.pos;
+
+  game.map.view[x][y].style.backgroundPositionX = "";
 }
 
 function spawnEnemy() {
@@ -374,12 +378,6 @@ function breakWindows() {
 
 function windowIsBreak({ x, y }) {
   return game.map.view[x][y].style.backgroundPositionX !== "";
-}
-
-function fixWindows({ x, y }) {
-  game.player.isBusy = true;
-
-  game.player.view.classList.add("fixing");
 }
 
 function main() {

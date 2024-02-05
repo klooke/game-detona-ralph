@@ -184,7 +184,7 @@ h2 {
 
 #player.fixing {
   width: var(--player-width-fixing);
-  animation: playerFixing 250ms step-start infinite;
+  animation: playerFixing 250ms step-start 2;
 }
 
 @keyframes playerFixing {
