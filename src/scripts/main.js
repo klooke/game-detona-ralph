@@ -36,8 +36,7 @@ const game = {
   },
   enemy: {
     view: document.querySelector("#enemy"),
-    mapView: Array.from(document.querySelectorAll(".window-closed")),
-    posX: 0,
+    pos: { x: 0, y: 0 },
     velocity: 0.2,
     wreckDuration: 500, //ms
   },
@@ -228,13 +227,41 @@ function updateEnemyPosition() {
   }
 }
 
+function spawnEnemy() {
+  var enemyView = game.enemy.view;
+
+  enemyView.addEventListener("transitionend", () => {
+    enemyView.classList.remove("move");
+
+    enemyWreckIt();
+  });
+
+  enemyView.addEventListener("animationend", () => {
+    game.enemy.view.classList.remove("wreck");
+
+    updateEnemyPosition();
+  });
+
+  var { height: enemyHeight } = enemyView.getBoundingClientRect();
+
+  var {
+    left: windowLeft,
+    bottom: windowBottom,
+    width: windowWidth,
+  } = getWindowPosition(game.enemy.pos);
+
+  var newPosTop = windowBottom - enemyHeight;
+  var newPosLeft = windowLeft - windowWidth / 2;
+
+  enemyView.style.top = `${newPosTop}px`;
+  enemyView.style.left = `${newPosLeft}px`;
+
+  requestAnimationFrame(updateEnemyPosition);
+}
+
+
 function enemyWreckIt() {
   game.enemy.view.classList.add("wreck");
-
-  setTimeout(() => {
-    game.enemy.view.classList.remove("wreck");
-    updateEnemyPosition();
-  }, game.enemy.wreckDuration);
 
   requestAnimationFrame(throwWreck);
 }
@@ -348,6 +375,7 @@ function fixWindows({ x, y }) {
 
 function main() {
   spawnPlayer();
+  spawnEnemy();
 }
 
 main();
