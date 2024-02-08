@@ -1,6 +1,7 @@
 const game = {
   audios: {
     game: new Audio("../../res/audio/GAME.wav"),
+    timer: new Audio("../../res/audio/GAME-TIMER.wav"),
     fix: new Audio("../../res/audio/FELIX-FIX.wav"),
     jump: new Audio("../../res/audio/FELIX-JUMP.wav"),
     wreck: new Audio("../../res/audio/DETONA-WRECK.wav"),
@@ -101,11 +102,11 @@ function updateTime() {
   var time = game.time.value;
 
   game.time.view.textContent = String(time).padStart(2, "0");
-
+  
+  if (time == 8) playAudio("timer");
   if (time <= 0) clearInterval(game.time.id);
-  else time--;
 
-  game.time.value = time;
+  game.time.value = --time;
 }
 
 function startTime() {
@@ -209,6 +210,8 @@ function movePlayer() {
 
 function fixWindows() {
   var { x, y } = game.player.pos;
+
+  addScore(200);
 
   game.map.view[x][y].style.backgroundPositionX = "";
 }
@@ -343,6 +346,8 @@ function collidedWithPlayer(view) {
   if (isPlayerCollidedWith(view.getBoundingClientRect())) {
     game.player.isBusy = true;
 
+    addLife(-1);
+
     game.player.view.classList.add("take-damage");
 
     playAudio("damage");
@@ -435,6 +440,8 @@ function windowIsBreak({ x, y }) {
 function main() {
   spawnPlayer();
   spawnEnemy();
+  breakWindows();
+  startTime();
 
   playAudio("game", 0, 0, 0.5);
 }
