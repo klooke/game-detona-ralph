@@ -266,7 +266,7 @@ h2 {
 
 #enemy.wreck {
   width: var(--enemy-width-wreck);
-  animation: enemyWreck 350ms step-start;
+  animation: enemyWreck 450ms step-start 2;
   margin-left: calc(-30px * var(--scale));
 }
 

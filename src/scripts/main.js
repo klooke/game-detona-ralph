@@ -201,7 +201,10 @@ function spawnEnemy() {
   enemyView.addEventListener("animationend", () => {
     game.enemy.view.classList.remove("wreck");
 
-    moveEnemy();
+    requestAnimationFrame(() => {
+      throwWreck();
+      moveEnemy();
+    });
   });
 
   var { height: enemyHeight } = enemyView.getBoundingClientRect();
@@ -273,7 +276,6 @@ function moveEnemy() {
 function enemyWreckIt() {
   game.enemy.view.classList.add("wreck");
 
-  requestAnimationFrame(throwWreck);
 }
 
 function throwWreck() {
