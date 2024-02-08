@@ -1,5 +1,10 @@
 const game = {
   audios: {
+    game: new Audio("../../res/audio/GAME.wav"),
+    fix: new Audio("../../res/audio/FELIX-FIX.wav"),
+    jump: new Audio("../../res/audio/FELIX-JUMP.wav"),
+    wreck: new Audio("../../res/audio/DETONA-WRECK.wav"),
+    damage: new Audio("../../res/audio/FELIX-DAMAGE.wav"),
   },
   score: {
     view: document.querySelector("#score"),
@@ -113,7 +118,7 @@ function startTime() {
   return game.time;
 }
 
-function playAudio(name, repeatTime = 0, delay = 250, volume = 0.5) {
+function playAudio(name, repeatTime = 0, delay = 250, volume = 0.2) {
   game.audios[name].pause();
   game.audios[name].volume = volume;
   game.audios[name].currentTime = 0;
@@ -196,6 +201,8 @@ function movePlayer() {
   playerView.style.transitionDuration = `${duration}ms`;
   playerView.style.top = `${newPosTop}px`;
   playerView.style.left = `${newPosLeft}px`;
+
+  playAudio("jump");
 
   return playerView.getBoundingClientRect();
 }
@@ -293,6 +300,7 @@ function moveEnemy() {
 function enemyWreckIt() {
   game.enemy.view.classList.add("wreck");
 
+  playAudio("wreck", 3);
 }
 
 function throwWreck() {
@@ -336,6 +344,8 @@ function collidedWithPlayer(view) {
     game.player.isBusy = true;
 
     game.player.view.classList.add("take-damage");
+
+    playAudio("damage");
     return;
   }
 
@@ -396,6 +406,8 @@ function addPlayerController() {
         game.player.isBusy = true;
 
         game.player.view.classList.add("fixing");
+
+        playAudio("fix", 1);
         break;
     }
   });
@@ -423,6 +435,8 @@ function windowIsBreak({ x, y }) {
 function main() {
   spawnPlayer();
   spawnEnemy();
+
+  playAudio("game", 0, 0, 0.5);
 }
 
 main();
