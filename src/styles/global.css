@@ -11,11 +11,10 @@
   --lobby-width: calc(108px * var(--scale));
   --lobby-height: calc(177px * var(--scale));
   --lobby-door-width: calc(75px * var(--scale));
-  --player-width: calc(48px * var(--scale));
-  --player-height: calc(91px * var(--scale));
-  --player-fixing-width: calc(94px * var(--scale));
-  --player-damage-pos: calc(-380px * var(--scale));
-  --player-damage-width: calc(74px * var(--scale));
+  --player-width: calc(49px * var(--scale));
+  --player-height: calc(95px * var(--scale));
+  --player-fixing-width: calc(95px * var(--scale));
+  --player-damage-width: calc(85px * var(--scale));
   --enemy-width: calc(124px * var(--scale));
   --enemy-height: calc(160px * var(--scale));
   --enemy-width-wreck: calc(182px * var(--scale));
@@ -176,11 +175,14 @@ h2 {
 }
 
 @keyframes playerJump {
-  20% {
+  10% {
     background-position: calc(var(--player-width) * -2);
   }
-  80% {
+  70% {
     background-position: calc(var(--player-width) * -1);
+  }
+  90% {
+    background-position: calc(var(--player-width) * -2);
   }
 }
 
@@ -191,12 +193,10 @@ h2 {
 
 @keyframes playerFixing {
   50% {
-    background-position: calc(var(--player-width) * -4);
+    background-position: calc(-147px * var(--scale));
   }
   100% {
-    background-position: calc(
-      (var(--player-width) * -4) - var(--player-fixing-width)
-    );
+    background-position: calc(-242px * var(--scale));
   }
 }
 
@@ -206,38 +206,38 @@ h2 {
 
 #player.take-damage {
   width: var(--player-damage-width);
-  animation: playerTakeDamage 2s step-start;
+  animation: playerTakeDamage 1.8s step-start;
 }
 
 @keyframes playerTakeDamage {
+  5% {
+    transform: none;
+    background-position: calc(-338px * var(--scale));
+  }
   10% {
     transform: none;
-    background-position: var(--player-damage-pos);
+    background-position: calc(-422px * var(--scale));
+  }
+  15% {
+    transform: none;
+    background-position: calc(-507px * var(--scale));
+  }
+  20% {
+    transform: scaleY(-1);
+    background-position: calc(-422px * var(--scale));
+  }
+  25% {
+    transform: scaleX(-1);
+    background-position: calc(-507px * var(--scale));
   }
   30% {
     transform: none;
-    background-position: calc(
-      var(--player-damage-pos) + (var(--player-damage-width) * -1)
-    );
-  }
-  50% {
-    transform: none;
-    background-position: calc(
-      var(--player-damage-pos) + (var(--player-damage-width) * -2)
-    );
-  }
-  70% {
-    transform: scaleY(-1);
-    background-position: calc(
-      var(--player-damage-pos) + (var(--player-damage-width) * -1)
-    );
+    background-position: calc(-592px * var(--scale));
   }
   100% {
-    transform: scaleX(-1);
-    background-position: calc(
-      var(--player-damage-pos) + (var(--player-damage-width) * -2)
-    );
-  }  
+    transform: none;
+    background-position: calc(-680px * var(--scale));
+  }
 }
 
 #enemy {
