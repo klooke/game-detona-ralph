@@ -1,4 +1,6 @@
 const game = {
+  audios: {
+  },
   score: {
     view: document.querySelector("#score"),
     limit: 9999999,
@@ -109,6 +111,21 @@ function startTime() {
   game.time.id = setInterval(updateTime, 1000);
 
   return game.time;
+}
+
+function playAudio(name, repeatTime = 0, delay = 250, volume = 0.5) {
+  game.audios[name].pause();
+  game.audios[name].volume = volume;
+  game.audios[name].currentTime = 0;
+  game.audios[name].play();
+
+  if (repeatTime > 0) {
+    var id = setTimeout(() => {
+      playAudio(name, repeatTime - 1);
+
+      clearTimeout(id);
+    }, delay);
+  }
 }
 
 function getWindowPosition({ x, y }) {
