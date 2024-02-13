@@ -1,4 +1,5 @@
 const game = {
+  isPaused: false,
   audios: {
     game: new Audio("../../res/audio/GAME.wav"),
     timer: new Audio("../../res/audio/GAME-TIMER.wav"),
@@ -99,6 +100,8 @@ function updateHiscore() {
 }
 
 function updateTime() {
+  if (game.isPaused) return;
+
   var time = game.time.value;
 
   game.time.view.textContent = String(time).padStart(2, "0");
@@ -131,6 +134,13 @@ function playAudio(name, repeatTime = 0, delay = 250, volume = 0.2) {
 
       clearTimeout(id);
     }, delay);
+  }
+}
+
+function muteAudio() {
+  for (var name in game.audios) {
+    if (game.isPaused) game.audios[name].pause();
+    else game.audios[name].play();
   }
 }
 
@@ -221,6 +231,8 @@ function spawnEnemy() {
 
   enemyView.addEventListener("transitionend", () => {
     enemyView.classList.remove("move");
+
+    enemyView.getAnimations().forEach((anim) => anim.cancel());
 
     enemyWreckIt();
   });
@@ -348,6 +360,11 @@ function collidedWithPlayer(view) {
 
     addLife(-1);
 
+    game.player.view
+      .getAnimations()
+      .filter((anim) => anim.animationName || false)[0]
+      ?.cancel();
+
     game.player.view.classList.add("take-damage");
 
     playAudio("damage");
@@ -372,25 +389,38 @@ function addPlayerController() {
   window.addEventListener("keydown", (event) => {
     event.preventDefault();
 
-    if (game.player.isBusy) return;
-
     switch (event.key) {
       case "ArrowDown":
-        if (game.player.pos.x >= game.player.pos.maxX) break;
+        if (
+          game.player.pos.x >= game.player.pos.maxX ||
+          game.isPaused ||
+          game.player.isBusy
+        )
+          break;
 
         game.player.pos.x++;
 
         movePlayer();
         break;
       case "ArrowUp":
-        if (game.player.pos.x <= game.player.pos.minX) break;
+        if (
+          game.player.pos.x <= game.player.pos.minX ||
+          game.isPaused ||
+          game.player.isBusy
+        )
+          break;
 
         game.player.pos.x--;
 
         movePlayer();
         break;
       case "ArrowRight":
-        if (game.player.pos.y >= game.player.pos.maxY) break;
+        if (
+          game.player.pos.y >= game.player.pos.maxY ||
+          game.isPaused ||
+          game.player.isBusy
+        )
+          break;
 
         game.player.view.classList.remove("flipX");
         game.player.pos.y++;
@@ -398,7 +428,12 @@ function addPlayerController() {
         movePlayer();
         break;
       case "ArrowLeft":
-        if (game.player.pos.y <= game.player.pos.minY) break;
+        if (
+          game.player.pos.y <= game.player.pos.minY ||
+          game.isPaused ||
+          game.player.isBusy
+        )
+          break;
 
         game.player.view.classList.add("flipX");
         game.player.pos.y--;
@@ -406,13 +441,22 @@ function addPlayerController() {
         movePlayer();
         break;
       case "e":
-        if (!windowIsBreak(game.player.pos)) break;
+        if (
+          !windowIsBreak(game.player.pos) ||
+          game.isPaused ||
+          game.player.isBusy
+        )
+          break;
 
         game.player.isBusy = true;
 
         game.player.view.classList.add("fixing");
 
         playAudio("fix", 1);
+        break;
+      case "Escape":
+        if (!game.isPaused) pauseGame();
+        else resumeGame();
         break;
     }
   });
@@ -435,6 +479,32 @@ function breakWindows() {
 
 function windowIsBreak({ x, y }) {
   return game.map.view[x][y].style.backgroundPositionX !== "";
+}
+
+function pauseGame() {
+  game.isPaused = true;
+
+  game.player.view.getAnimations().forEach((anim) => anim.pause());
+  game.enemy.view.getAnimations().forEach((anim) => anim.pause());
+
+  document
+    .querySelectorAll(".wreckage")
+    .forEach((wreck) => wreck.getAnimations()[0].pause());
+
+  muteAudio();
+}
+
+function resumeGame() {
+  game.isPaused = false;
+
+  game.player.view.getAnimations().forEach((anim) => anim.play());
+  game.enemy.view.getAnimations().forEach((anim) => anim.play());
+
+  document
+    .querySelectorAll(".wreckage")
+    .forEach((wreck) => wreck.getAnimations()[0].play());
+
+  muteAudio();
 }
 
 function main() {
