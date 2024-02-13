@@ -1,12 +1,48 @@
+class AudioGame extends Audio {
+  constructor(path) {
+    super(path);
+
+    this.repeatTime = 0;
+    this.delay = 0; //ms
+  }
+
+  resume() {
+    if (this.currentTime <= 0 && this.repeatTime <= 0) return;
+
+    this.play();
+  }
+
+  stop() {
+    this.pause();
+    this.currentTime = 0;
+
+    if (this.repeatTime > 0) this.repeatTime--;
+  }
+
+  play() {
+    this.onended = () => this.stop();
+    super.play();
+
+    if (this.repeatTime > 0) {
+      var id = setTimeout(() => {
+        this.stop();
+        this.play();
+
+        clearTimeout(id);
+      }, this.delay);
+    }
+  }
+}
+
 const game = {
   isPaused: false,
   audios: {
-    game: new Audio("../../res/audio/GAME.wav"),
-    timer: new Audio("../../res/audio/GAME-TIMER.wav"),
-    fix: new Audio("../../res/audio/FELIX-FIX.wav"),
-    jump: new Audio("../../res/audio/FELIX-JUMP.wav"),
-    wreck: new Audio("../../res/audio/DETONA-WRECK.wav"),
-    damage: new Audio("../../res/audio/FELIX-DAMAGE.wav"),
+    game: new AudioGame("../../res/audio/GAME.wav"),
+    timer: new AudioGame("../../res/audio/GAME-TIMER.wav"),
+    fix: new AudioGame("../../res/audio/FELIX-FIX.wav"),
+    jump: new AudioGame("../../res/audio/FELIX-JUMP.wav"),
+    wreck: new AudioGame("../../res/audio/DETONA-WRECK.wav"),
+    damage: new AudioGame("../../res/audio/FELIX-DAMAGE.wav"),
   },
   score: {
     view: document.querySelector("#score"),
@@ -106,8 +142,8 @@ function updateTime() {
 
   game.time.view.textContent = String(time).padStart(2, "0");
   
-  if (time == 8) playAudio("timer");
   if (time <= 0) clearInterval(game.time.id);
+  if (time == 8) playAudio(game.audios.timer);
 
   game.time.value = --time;
 }
@@ -122,25 +158,19 @@ function startTime() {
   return game.time;
 }
 
-function playAudio(name, repeatTime = 0, delay = 250, volume = 0.2) {
-  game.audios[name].pause();
-  game.audios[name].volume = volume;
-  game.audios[name].currentTime = 0;
-  game.audios[name].play();
+function playAudio(audio, repeatTime = 0, delay = 250, volume = 0.2) {
+  if (game.isPaused) return;
 
-  if (repeatTime > 0) {
-    var id = setTimeout(() => {
-      playAudio(name, repeatTime - 1);
-
-      clearTimeout(id);
-    }, delay);
-  }
+  audio.repeatTime = repeatTime;
+  audio.delay = delay;
+  audio.volume = volume;
+  audio.play();
 }
 
 function muteAudio() {
   for (var name in game.audios) {
     if (game.isPaused) game.audios[name].pause();
-    else game.audios[name].play();
+    else game.audios[name].resume();
   }
 }
 
@@ -213,7 +243,7 @@ function movePlayer() {
   playerView.style.top = `${newPosTop}px`;
   playerView.style.left = `${newPosLeft}px`;
 
-  playAudio("jump");
+  playAudio(game.audios.jump);
 
   return playerView.getBoundingClientRect();
 }
@@ -314,8 +344,7 @@ function moveEnemy() {
 
 function enemyWreckIt() {
   game.enemy.view.classList.add("wreck");
-
-  playAudio("wreck", 3);
+  playAudio(game.audios.wreck, 3);
 }
 
 function throwWreck() {
@@ -367,7 +396,7 @@ function collidedWithPlayer(view) {
 
     game.player.view.classList.add("take-damage");
 
-    playAudio("damage");
+    playAudio(game.audios.damage);
     return;
   }
 
@@ -452,7 +481,7 @@ function addPlayerController() {
 
         game.player.view.classList.add("fixing");
 
-        playAudio("fix", 1);
+        playAudio(game.audios.fix, 1);
         break;
       case "Escape":
         if (!game.isPaused) pauseGame();
@@ -513,7 +542,7 @@ function main() {
   breakWindows();
   startTime();
 
-  playAudio("game", 0, 0, 0.5);
+  playAudio(game.audios.game, 0, 0, 0.5);
 }
 
 main();
