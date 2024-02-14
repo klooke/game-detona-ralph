@@ -181,7 +181,7 @@ h2 {
 }
 
 #level {
-  margin: auto;
+  width: 100vw;
   position: relative;
   z-index: 1;
 }

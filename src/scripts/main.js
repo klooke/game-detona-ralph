@@ -34,58 +34,62 @@ class AudioGame extends Audio {
   }
 }
 
-const game = {
-  isPaused: false,
-  audios: {
-    game: new AudioGame("../../res/audio/GAME.wav"),
-    timer: new AudioGame("../../res/audio/GAME-TIMER.wav"),
-    fix: new AudioGame("../../res/audio/FELIX-FIX.wav"),
-    jump: new AudioGame("../../res/audio/FELIX-JUMP.wav"),
-    wreck: new AudioGame("../../res/audio/DETONA-WRECK.wav"),
-    damage: new AudioGame("../../res/audio/FELIX-DAMAGE.wav"),
-  },
-  score: {
-    view: document.querySelector("#score"),
-    limit: 9999999,
-    value: 0,
-  },
-  time: {
-    view: document.querySelector("#time"),
-    id: null,
-    value: 45,
-  },
-  hiscore: {
-    view: document.querySelector("#hiscore"),
-    value: 0,
-  },
-  life: {
-    view: document.querySelectorAll("#life > img"),
-    limit: 5,
-    value: 3,
-  },
-  map: {
-    view: [
-      Array.from(document.querySelectorAll(".window-closed")),
-      Array.from(document.querySelectorAll("div[id^='wp0']")),
-      Array.from(document.querySelectorAll("div[id^='wp1']")),
-      Array.from(document.querySelectorAll("div[id^='wp2']")),
-    ],
-  },
-  player: {
-    view: document.querySelector("#player"),
-    isBusy: false,
-    pos: { x: 3, y: 0, minX: 1, maxX: 3, minY: 0, maxY: 4 },
-    velocity: 0.5,
-  },
-  enemy: {
-    view: document.querySelector("#enemy"),
-    pos: { x: 0, y: 0 },
-    velocity: 0.1,
-  },
-  wreckage: {
-    velocity: 0.2,
-  },
-};
+class Game {
+  constructor() {
+    this.isPaused = false;
+    this.audios = {
+      game: new AudioGame("../../res/audio/GAME.wav"),
+      timer: new AudioGame("../../res/audio/GAME-TIMER.wav"),
+      fix: new AudioGame("../../res/audio/FELIX-FIX.wav"),
+      jump: new AudioGame("../../res/audio/FELIX-JUMP.wav"),
+      wreck: new AudioGame("../../res/audio/DETONA-WRECK.wav"),
+      damage: new AudioGame("../../res/audio/FELIX-DAMAGE.wav"),
+    };
+    this.score = {
+      view: document.querySelector("#score"),
+      limit: 9999999,
+      value: 0,
+    };
+    this.time = {
+      view: document.querySelector("#time"),
+      id: null,
+      value: 45,
+    };
+    this.hiscore = {
+      view: document.querySelector("#hiscore"),
+      value: 0,
+    };
+    this.life = {
+      view: document.querySelectorAll("#life > img"),
+      limit: 5,
+      value: 3,
+    };
+    this.map = {
+      view: [
+        Array.from(document.querySelectorAll(".window-closed")),
+        Array.from(document.querySelectorAll("div[id^='wp0']")),
+        Array.from(document.querySelectorAll("div[id^='wp1']")),
+        Array.from(document.querySelectorAll("div[id^='wp2']")),
+      ],
+    };
+    this.player = {
+      view: document.querySelector("#player"),
+      isBusy: false,
+      pos: { x: 3, y: 0, minX: 1, maxX: 3, minY: 0, maxY: 4 },
+      velocity: 0.5,
+    };
+    this.enemy = {
+      view: document.querySelector("#enemy"),
+      pos: { x: 0, y: 0 },
+      velocity: 0.1,
+    };
+    this.wreckage = {
+      velocity: 0.2,
+    };
+  }
+}
+
+var game = null;
 
 function addScore(value = 0) {
   var score = game.score.value;
@@ -536,7 +540,57 @@ function resumeGame() {
   muteAudio();
 }
 
-function main() {
+function startGame(event) {
+  event.preventDefault();
+
+  window.removeEventListener("keydown", startGame);
+
+  document.querySelector("main").innerHTML = `
+  <div id="hud">
+    <h2>score <span id="score">0000000</span></h2>
+    <h2>hiscore <span id="hiscore">0000000</span></h2>
+    <h2>time <span id="time">00</span></h2>
+    <div id="life">
+      <img src="./res/sprites/life.png" alt="" />
+      <img src="./res/sprites/life.png" alt="" />
+      <img src="./res/sprites/life.png" alt="" />
+      <img src="./res/sprites/life.png" alt="" hidden />
+      <img src="./res/sprites/life.png" alt="" hidden />
+    </div>
+  </div>
+  <div id="level">
+    <div id="level-background"></div>
+    <div id="level-building">
+      <!-- Enemy positions -->
+      <div class="window-closed"></div>
+      <div class="window-closed"></div>
+      <div class="window-closed"></div>
+      <div class="window-closed"></div>
+      <div class="window-closed"></div>
+
+      <!-- Player positions -->
+      <div class="window" id="wp00"></div>
+      <div class="window" id="wp01"></div>
+      <div class="window" id="wp02"></div>
+      <div class="window" id="wp03"></div>
+      <div class="window" id="wp04"></div>
+      <div class="window" id="wp10"></div>
+      <div class="window" id="wp11"></div>
+      <div class="window-lobby" id="wp12"></div>
+      <div class="window" id="wp13"></div>
+      <div class="window" id="wp14"></div>
+      <div class="window" id="wp20"></div>
+      <div class="window" id="wp21"></div>
+      <div class="lobby" id="wp22"></div>
+      <div class="window" id="wp23"></div>
+      <div class="window" id="wp24"></div>
+    </div>
+  </div>
+  <div id="player"></div>
+  <div id="enemy"></div>
+`;
+  game = new Game();
+
   spawnPlayer();
   spawnEnemy();
   breakWindows();
@@ -545,4 +599,4 @@ function main() {
   playAudio(game.audios.game, 0, 0, 0.5);
 }
 
-main();
+window.addEventListener("keydown", startGame);
