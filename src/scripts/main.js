@@ -139,17 +139,23 @@ function updateHiscore() {
   return game.hiscore;
 }
 
+function addTime(value = 0) {
+  var time = game.time.value + value;
+
+  game.time.view.textContent = String(time).padStart(2, "0");
+
+  game.time.value = time;
+}
+
 function updateTime() {
   if (game.isPaused) return;
 
   var time = game.time.value;
 
-  game.time.view.textContent = String(time).padStart(2, "0");
-  
   if (time <= 0) clearInterval(game.time.id);
   if (time == 8) playAudio(game.audios.timer);
 
-  game.time.value = --time;
+  addTime(-1);
 }
 
 function startTime() {
@@ -204,9 +210,7 @@ function spawnPlayer() {
   playerView.addEventListener("animationend", () => {
     if (playerView.classList.contains("fixing")) fixWindows();
 
-    playerView.classList.remove("jump");
-    playerView.classList.remove("take-damage");
-    playerView.classList.remove("fixing");
+    playerView.classList.remove("jump", "take-damage", "fixing");
 
     game.player.isBusy = false;
   });
@@ -272,7 +276,7 @@ function spawnEnemy() {
   });
 
   enemyView.addEventListener("animationend", () => {
-    game.enemy.view.classList.remove("wreck");
+    enemyView.classList.remove("wreck");
 
     requestAnimationFrame(() => {
       throwWreck();
