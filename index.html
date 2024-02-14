@@ -18,50 +18,20 @@
   </head>
   <body>
     <main>
-      <div id="hud">
-        <h2>score <span id="score">0000000</span></h2>
-        <h2>hiscore <span id="hiscore">0000000</span></h2>
-        <h2>time <span id="time">00</span></h2>
-        <div id="life">
-          <img src="./res/sprites/life.png" alt="" />
-          <img src="./res/sprites/life.png" alt="" />
-          <img src="./res/sprites/life.png" alt="" />
-          <img src="./res/sprites/life.png" alt="" hidden/>
-          <img src="./res/sprites/life.png" alt="" hidden/>
-        </div>
+      <div id="title-menu">
+        <h2>
+          his score <br />
+          <span>0000000</span>
+        </h2>
+        <img src="./res/sprites/title.png" alt="Fix It, Felix Jr." />
+        <h2 class="text-blink">Press any key</h2>
+        <h2>
+          ©️TOBIKOMI COMPANY 1982 <br />
+          ALL RIGHTS RESERVED
+        </h2>
       </div>
-      <div id="level">
-        <div id="level-background"></div>
-        <div id="level-building">
-          <!-- Enemy positions -->
-          <div class="window-closed"></div>
-          <div class="window-closed"></div>
-          <div class="window-closed"></div>
-          <div class="window-closed"></div>
-          <div class="window-closed"></div>
-
-          <!-- Player positions -->
-          <div class="window" id="wp00"></div>
-          <div class="window" id="wp01"></div>
-          <div class="window" id="wp02"></div>
-          <div class="window" id="wp03"></div>
-          <div class="window" id="wp04"></div>
-          <div class="window" id="wp10"></div>
-          <div class="window" id="wp11"></div>
-          <div class="window-lobby" id="wp12"></div>
-          <div class="window" id="wp13"></div>
-          <div class="window" id="wp14"></div>
-          <div class="window" id="wp20"></div>
-          <div class="window" id="wp21"></div>
-          <div class="lobby" id="wp22"></div>
-          <div class="window" id="wp23"></div>
-          <div class="window" id="wp24"></div>
-        </div>
-      </div>
-      <div id="player"></div>
-      <div id="enemy"></div>
     </main>
 
-    <script defer src="./src/scripts/main.js"></script>
+    <script src="./src/scripts/main.js" defer></script>
   </body>
 </html>
