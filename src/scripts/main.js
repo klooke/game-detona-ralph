@@ -540,6 +540,30 @@ function resumeGame() {
   muteAudio();
 }
 
+
+function gameOver() {
+  pauseGame();
+
+  var gameOver = new Audio("../../res/audio/GAME-OVER.wav");
+  gameOver.volume = 0.5;
+  gameOver.play();
+
+  document.querySelector("main").innerHTML = `
+  <div id="game-over">
+    <h2>
+      Score <br />
+      <span>${game.score.view.textContent}</span>
+    </h2>
+    <h1>Game Over</h1>
+    <img src="./res/sprites/game-over.png" alt="Game Over" />
+  </div>
+  `;
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 5000);
+}
+
 function startGame(event) {
   event.preventDefault();
 

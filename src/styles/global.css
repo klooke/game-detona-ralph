@@ -166,6 +166,25 @@ h2 {
   }
 }
 
+#game-over {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 90% 0;
+  gap: 2em;
+
+  h1 {
+    color: red;
+  }
+
+  h2,
+  span {
+    font-size: x-large;
+  }
+}
+
 #hud {
   width: 100%;
   display: grid;
