@@ -185,6 +185,25 @@ h2 {
   }
 }
 
+#stage-completed {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 70% 0;
+  gap: 2em;
+
+  h1 {
+    color: green;
+  }
+
+  h2,
+  span {
+    font-size: x-large;
+  }
+}
+
 #hud {
   width: 100%;
   display: grid;

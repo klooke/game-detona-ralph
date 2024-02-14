@@ -495,6 +495,16 @@ function addPlayerController() {
   });
 }
 
+function hasBreakWindows() {
+  var windows = document.querySelectorAll(".window");
+
+  for (var w of windows) {
+    if (w.style.backgroundPositionX !== "") return true;
+  }
+
+  return false;
+}
+
 function breakWindows() {
   var windows = document.querySelectorAll(".window");
 
@@ -540,6 +550,31 @@ function resumeGame() {
   muteAudio();
 }
 
+function stageIsCompleted() {
+  if (hasBreakWindows()) return;
+
+  pauseGame();
+
+    var gameCompleted = new Audio("../../res/audio/GAME-COMPLETED.wav");
+    gameCompleted.volume = 0.5;
+    gameCompleted.play();
+
+    document.querySelector("main").innerHTML = `
+    <div id="stage-completed">
+      <h2>
+        Score <br />
+        <span>${game.score.view.textContent}</span>
+      </h2>
+      <h1>It's fixed!</h1>
+      <img src="./res/sprites/stage-completed.png" alt="It's fixed!" />
+    </div>
+    `;
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  }, 100);
+}
 
 function gameOver() {
   pauseGame();
