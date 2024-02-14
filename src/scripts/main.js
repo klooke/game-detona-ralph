@@ -152,7 +152,10 @@ function updateTime() {
 
   var time = game.time.value;
 
-  if (time <= 0) clearInterval(game.time.id);
+  if (time <= 0) {
+    clearInterval(game.time.id);
+    gameOver();
+  }
   if (time == 8) playAudio(game.audios.timer);
 
   addTime(-1);
@@ -213,6 +216,8 @@ function spawnPlayer() {
     playerView.classList.remove("jump", "take-damage", "fixing");
 
     game.player.isBusy = false;
+
+    if (game.life.value <= 0) gameOver();
   });
 
   var { top: newPosTop, left: newPosLeft } = getWindowPosition(game.player.pos);
@@ -262,6 +267,8 @@ function fixWindows() {
   addScore(200);
 
   game.map.view[x][y].style.backgroundPositionX = "";
+
+  requestAnimationFrame(() => stageIsCompleted());
 }
 
 function spawnEnemy() {
