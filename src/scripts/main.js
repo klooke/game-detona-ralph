@@ -559,6 +559,23 @@ function stageIsCompleted() {
 
   pauseGame();
 
+  var gainScore = new Audio("../../res/audio/GAIN-SCORE.wav");
+
+  var id = setInterval(() => {
+    if (game.time.value > 0) {
+      addTime(-1);
+      addScore(50);
+
+      gainScore.pause();
+      gainScore.currentTime = 0;
+      gainScore.volume = 0.5;
+      gainScore.play();
+
+      return;
+    }
+
+    clearInterval(id);
+
     var gameCompleted = new Audio("../../res/audio/GAME-COMPLETED.wav");
     gameCompleted.volume = 0.5;
     gameCompleted.play();
