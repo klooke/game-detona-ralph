@@ -38,12 +38,12 @@ class Game {
   constructor() {
     this.isPaused = false;
     this.audios = {
-      game: new AudioGame("../../res/audio/GAME.wav"),
-      timer: new AudioGame("../../res/audio/GAME-TIMER.wav"),
-      fix: new AudioGame("../../res/audio/FELIX-FIX.wav"),
-      jump: new AudioGame("../../res/audio/FELIX-JUMP.wav"),
-      wreck: new AudioGame("../../res/audio/DETONA-WRECK.wav"),
-      damage: new AudioGame("../../res/audio/FELIX-DAMAGE.wav"),
+      game: new AudioGame("./res/audio/GAME.wav"),
+      timer: new AudioGame("./res/audio/GAME-TIMER.wav"),
+      fix: new AudioGame("./res/audio/FELIX-FIX.wav"),
+      jump: new AudioGame("./res/audio/FELIX-JUMP.wav"),
+      wreck: new AudioGame("./res/audio/DETONA-WRECK.wav"),
+      damage: new AudioGame("./res/audio/FELIX-DAMAGE.wav"),
     };
     this.score = {
       view: document.querySelector("#score"),
